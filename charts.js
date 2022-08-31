@@ -56,7 +56,7 @@ function buildCharts(sample) {
   // DELIVERABLE 1 - bar chart
   // 2. Use d3.json to load and retrieve the samples.json file 
   d3.json("samples.json").then((data) => {
-    console.log(data);
+    // console.log(data);
     // 3. Create a variable that holds the samples array. 
     let samples = data.samples;
 
@@ -111,7 +111,47 @@ function buildCharts(sample) {
     };
 
     // 3. Use Plotly to plot the data with the layout.
-    Plotly.newPlot("bubble", bubbleData, bubbleLayout);     
+    Plotly.newPlot("bubble", bubbleData, bubbleLayout);
+
+    // DELIVERABLE 3 - gauge chart
+    // 1 & 2. Create a variable that filters the metadata array and holds first sample.
+    let metadata = data.metadata;
+    let metadataFiltered = metadata.filter(Obj => Obj.id == sample)[0];
+    // console.log(metadataFiltered);
+
+    // 3. Create a variable that holds the washing frequency.
+    let sampleWfreq = parseFloat(metadataFiltered.wfreq)
     
+    // 4. Create the trace for the gauge chart.
+    var gaugeData = [ {
+      type : "indicator" ,
+      mode : "gauge+number" ,
+      value : sampleWfreq ,
+      title : '<b>Belly Button Washing Frequency</b> <br> Scrubs per Week' ,
+      gauge : { 
+        axis : { range : [null , 10]} ,
+        bar : { color : "black" },
+        steps : [
+          { range : [0,2], color: "red" } ,
+          { range : [2,4], color : "orange" } ,
+          { range : [4,6], color : "yellow" } ,
+          { range : [6,8], color : "limegreen" } ,
+          { range : [8,10], color : "green"}
+        ]
+      }
+    }];
+    
+    // 5. Create the layout for the gauge chart.
+    var gaugeLayout = { 
+      width : 450 ,
+      height : 450 ,
+      margin: { t: 10, r: 25, l: 25, b: 10 }
+    };
+
+    // 6. Use Plotly to plot the gauge data and layout.
+    Plotly.newPlot("gauge", gaugeData, gaugeLayout);
+
   });
 }
+
+
